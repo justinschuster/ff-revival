@@ -15,7 +15,6 @@ def fetch_league():
     # create url
     url = f'https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/leagueHistory/{league_id}?seasonId={year}'
 
-
     league = League(league_id=172893, year=2020, swid=espn_swid, espn_s2=espn_s2, debug=True)
     
     # set cookies
