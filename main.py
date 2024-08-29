@@ -1,3 +1,4 @@
+import json
 import requests
 import pandas as pd 
 
@@ -22,17 +23,29 @@ class League:
         self.year = year
         self.swid = espn_swid
         self.espn_s2 = espn_s2
-        #self.url = f'https://fantasy.espn.com/apis/v3/games/ffl/leagueHistory/{self.league_id}?seasonId={self.year}'
+        self.owners = []
         self.url = f'https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/leagueHistory/{self.league_id}?seasonId={self.year}'
         self.cookies = {
             "swid": self.swid,
             "espn_s2": self.espn_s2
         }
-        print(self.swid)
-        print()
-        resp = requests.get(url, cookies={"swid": self.swid, "espn_s2": self.espn_s2})
-        print(resp)
+
+    def make_request(self):
+        resp = requests.get(self.url, cookies={"swid": self.swid, "espn_s2": self.espn_s2})
+        return resp
+
+    def get_owners(self):
+        resp = self.make_request()
+        body = json.loads(resp.text)[0]
+        print(body)
+        for owner in body["members"]:
+            self.owners.append(owner['displayName'])
+
+    def check_other_stuff(self):
+        resp = self.make_request()
+        body = json.loads(resp.text)[0]
 
 if __name__ == "__main__":
     league = League(league_id, year, espn_swid, espn_s2)
-    print(league.url)
+    league.get_owners()
+    league.check_other_stuff()
